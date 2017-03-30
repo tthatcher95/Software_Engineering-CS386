@@ -18,7 +18,7 @@ def YouTubeSearch(string):
 # imported library
 def UI():
     base = Tk()
-    base.title("Youtubte Plugin")
+    base.title("Youtube Plugin")
     base.geometry("255x200")
     frame = Frame(base)
     frame.pack()
