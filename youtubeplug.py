@@ -1,4 +1,6 @@
-import speech_recognition as sr;
+import speech_recognition as sr
+import webbrowser;
+import pyttsx
 #import YouTubeAPI;
 #import Django;
 #import pyaudio;
@@ -6,9 +8,12 @@ from apiclient.discovery import build
 from apiclient.errors import HttpError
 from oauth2client.tools import argparser
 
-from tkinter import *;
+
+from Tkinter import *
 
 DEV_API_KEY = "AIzaSyADIqaClVv1ibPuIx7v2Gq4eNlfhHu1T30"
+
+engine = pyttsx.init()
 
 # Will return a string from user spoken words recorded
 # by the microphone in computer or mobile device
@@ -16,6 +21,7 @@ def voiceRecognition():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("What do you want to search for?")
+        engine.runAndWait()
         audio = r.listen(source)
 
     #https://github.com/Uberi/speech_recognition/blob/master/examples/microphone_recognition.py
@@ -56,7 +62,8 @@ def YouTubeSearch(inputStr):
     for search_result in search_results.get("items", []):
         if search_result["id"]["kind"] == "youtube#video":
           videos.append("%s (%s)" % (search_result["snippet"]["title"], search_result["id"]["videoId"]))
-          print("https://www.youtube.com/watch?v=" + search_result["id"]["videoId"])
+          print("Opening: https://www.youtube.com/watch?v=" + search_result["id"]["videoId"])
+          webbrowser.open("https://www.youtube.com/watch?v=" + search_result["id"]["videoId"])
 
     #print out list of videos
     #print(videos)
