@@ -1,8 +1,14 @@
 import speech_recognition as sr;
 #import YouTubeAPI;
 #import Django;
-import pyaudio;
+#import pyaudio;
+from apiclient.discovery import build
+from apiclient.errors import HttpError
+from oauth2client.tools import argparser
+
 from tkinter import *;
+
+DEV_API_KEY = "AIzaSyADIqaClVv1ibPuIx7v2Gq4eNlfhHu1T30"
 
 # Will return a string from user spoken words recorded
 # by the microphone in computer or mobile device
@@ -40,7 +46,25 @@ def voiceRecognition():
 
 # Take the value from voiceRecognition() run a search
 # in YouTube and yield a video using predefined functions
-def YouTubeSearch(string):
+def YouTubeSearch(inputStr):
+    yt = build("youtube", "v3", developerKey= DEV_API_KEY)
+
+    search_results = yt.search().list(q = inputStr, part = "id, snippet", maxResults = 1).execute()
+
+    videos = []
+
+    for search_result in search_results.get("items", []):
+        if search_result["id"]["kind"] == "youtube#video":
+          videos.append("%s (%s)" % (search_result["snippet"]["title"], search_result["id"]["videoId"]))
+          print("https://www.youtube.com/watch?v=" + search_result["id"]["videoId"])
+
+    #print out list of videos
+    #print(videos)
+
+    #search_result = search_results[0]
+    #vidID = search_result["id"]["videoId"]
+    #print("https://www.youtube.com/watch?v=" + "vidID")
+
     return
 
 # basic UI to give an idea of what the application should look like
