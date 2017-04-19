@@ -1,9 +1,10 @@
 import speech_recognition as sr
 import webbrowser;
-import pyttsx
+import time
+from gtts import gTTS
+import os
 #import YouTubeAPI;
 #import Django;
-#import pyaudio;
 from apiclient.discovery import build
 from apiclient.errors import HttpError
 from oauth2client.tools import argparser
@@ -13,15 +14,18 @@ from Tkinter import *
 
 DEV_API_KEY = "AIzaSyADIqaClVv1ibPuIx7v2Gq4eNlfhHu1T30"
 
-engine = pyttsx.init()
 
 # Will return a string from user spoken words recorded
 # by the microphone in computer or mobile device
 def voiceRecognition():
+
+    #Text to Speech
+    tts = gTTS(text='What do you want to search for?', lang='en')
+    tts.save("good.mp3")
+    os.system("mpg321 good.mp3")
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("What do you want to search for?")
-        engine.runAndWait()
         audio = r.listen(source)
 
     #https://github.com/Uberi/speech_recognition/blob/master/examples/microphone_recognition.py
@@ -34,7 +38,11 @@ def voiceRecognition():
     except sr.RequestError as e:
         print("Error: ; {0}".format(e))
 
-    #Confirm search
+    #Confirm search with text to speech
+    tts = gTTS(text="Did you mean to say '" + searchText + "'?'", lang='en')
+    tts.save("good.mp3")
+    os.system("mpg321 good.mp3")
+
     with sr.Microphone() as source:
         print("Did you mean to say '" + searchText + "'?")
         audio2 = r.listen(source)
@@ -42,6 +50,9 @@ def voiceRecognition():
 
     #Check confirmation voice cue
     if ('yes' == listenedTwo):
+        tts = gTTS(text="Ok, searching for'" + searchText + "'?'", lang='en')
+        tts.save("good.mp3")
+        os.system("mpg321 good.mp3")
         print("OK, searching for '" + searchText + "'")
         YouTubeSearch(searchText)
     else:
